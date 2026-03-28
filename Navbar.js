@@ -1,14 +1,11 @@
 
 import React from 'react';
-import { Logo } from './Logo';
-import { MessageSquare } from 'lucide-react';
+import htm from 'htm';
+import { Logo } from './Logo.js';
 
-interface NavbarProps {
-  currentPage: string;
-  onNavigate: (page: string) => void;
-}
+const html = htm.bind(React.createElement);
 
-export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
+export const Navbar = ({ currentPage, onNavigate }) => {
   const DISCORD_LINK = "https://discord.gg/7rPtDM6sg";
   const navItems = [
     { id: 'home', label: 'HOME' },
@@ -17,30 +14,30 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
     { id: 'application', label: 'APPLICATION' },
   ];
 
-  return (
+  return html`
     <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-white/5 px-6 py-4 transition-all duration-300">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div 
           className="cursor-pointer group flex items-center gap-2"
-          onClick={() => onNavigate('home')}
+          onClick=${() => onNavigate('home')}
         >
-          <Logo size="sm" />
+          <${Logo} size="sm" />
         </div>
         
         <div className="flex items-center gap-8">
-          {navItems.map((item) => (
+          ${navItems.map((item) => html`
             <button 
-              key={item.id}
-              onClick={() => onNavigate(item.id)}
-              className={`text-xs font-bold tracking-widest transition-all duration-300 relative group ${currentPage === item.id ? 'text-blue-500' : 'text-gray-400 hover:text-white'}`}
+              key=${item.id}
+              onClick=${() => onNavigate(item.id)}
+              className=${`text-xs font-bold tracking-widest transition-all duration-300 relative group ${currentPage === item.id ? 'text-blue-500' : 'text-gray-400 hover:text-white'}`}
             >
-              {item.label}
-              <span className={`absolute -bottom-1 left-0 h-0.5 bg-blue-500 transition-all duration-300 ${currentPage === item.id ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
+              ${item.label}
+              <span className=${`absolute -bottom-1 left-0 h-0.5 bg-blue-500 transition-all duration-300 ${currentPage === item.id ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
             </button>
-          ))}
+          `)}
           
           <a 
-            href={DISCORD_LINK}
+            href=${DISCORD_LINK}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 text-gray-400 hover:text-[#5865F2] transition-all duration-300 group"
@@ -57,5 +54,5 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
         </div>
       </div>
     </nav>
-  );
+  `;
 };
