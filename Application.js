@@ -1,13 +1,11 @@
 
 import React, { useState } from 'react';
-import { Application } from '../types';
-import { CheckCircle2, ChevronRight, MessageCircle, AlertTriangle } from 'lucide-react';
+import htm from 'htm';
+import * as Lucide from 'lucide-react';
 
-interface ApplicationPageProps {
-  onSubmit: (app: Omit<Application, 'id' | 'status' | 'submittedAt'>) => void;
-}
+const html = htm.bind(React.createElement);
 
-export const ApplicationPage: React.FC<ApplicationPageProps> = ({ onSubmit }) => {
+export const ApplicationPage = ({ onSubmit }) => {
   const [submitted, setSubmitted] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [formData, setFormData] = useState({
@@ -21,13 +19,13 @@ export const ApplicationPage: React.FC<ApplicationPageProps> = ({ onSubmit }) =>
     additionalInfo: ''
   });
 
-  const handlePreSubmit = (e: React.FormEvent) => {
+  const handlePreSubmit = (e) => {
     e.preventDefault();
     setShowConfirmModal(true);
   };
 
   const finalizeSubmission = () => {
-    onSubmit(formData as any);
+    onSubmit(formData);
     setSubmitted(true);
     setShowConfirmModal(false);
     window.scrollTo(0, 0);
@@ -39,29 +37,29 @@ export const ApplicationPage: React.FC<ApplicationPageProps> = ({ onSubmit }) =>
   };
 
   if (submitted) {
-    return (
+    return html`
       <div className="pt-40 pb-20 px-6 min-h-screen flex items-center justify-center">
         <div className="max-w-lg w-full glass p-12 rounded-3xl border border-blue-500/20 text-center animate-in zoom-in duration-500">
           <div className="w-20 h-20 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-8">
-            <CheckCircle2 className="w-12 h-12 text-blue-500" />
+            <${Lucide.CircleCheck} className="w-12 h-12 text-blue-500" />
           </div>
           <h2 className="text-3xl font-black text-white mb-4 uppercase tracking-tight">Application Sent!</h2>
           <p className="text-gray-400 mb-8 leading-relaxed font-medium">
             Thank you for your application to Create 80ct. Your responses have been registered. 
-            A confirmation and future updates will be sent to you on Discord: <strong>{formData.discord}</strong>.
+            A confirmation and future updates will be sent to you on Discord: <strong>${formData.discord}</strong>.
           </p>
           <button 
-            onClick={() => window.location.hash = '#home'}
+            onClick=${() => window.location.hash = '#home'}
             className="px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold transition-all shadow-md"
           >
             Back to Home
           </button>
         </div>
       </div>
-    );
+    `;
   }
 
-  return (
+  return html`
     <div className="pt-32 pb-24 px-6 min-h-screen">
       <div className="max-w-3xl mx-auto">
         <div className="mb-12">
@@ -71,17 +69,17 @@ export const ApplicationPage: React.FC<ApplicationPageProps> = ({ onSubmit }) =>
           </p>
         </div>
 
-        <form onSubmit={handlePreSubmit} className="space-y-10">
+        <form onSubmit=${handlePreSubmit} className="space-y-10">
           <div className="glass p-8 md:p-10 rounded-3xl border border-white/5 space-y-8">
             <div className="space-y-2">
               <label className="block text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Discord Username (For updates)</label>
               <div className="relative">
-                <MessageCircle className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                <${Lucide.MessageCircle} className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                 <input 
                   required
                   type="text" 
-                  value={formData.discord}
-                  onChange={e => setFormData({...formData, discord: e.target.value})}
+                  value=${formData.discord}
+                  onChange=${e => setFormData({...formData, discord: e.target.value})}
                   className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors font-medium"
                   placeholder="username#0000"
                 />
@@ -94,8 +92,8 @@ export const ApplicationPage: React.FC<ApplicationPageProps> = ({ onSubmit }) =>
                 <input 
                   required
                   type="number" 
-                  value={formData.age}
-                  onChange={e => setFormData({...formData, age: e.target.value})}
+                  value=${formData.age}
+                  onChange=${e => setFormData({...formData, age: e.target.value})}
                   className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors font-medium"
                   placeholder="e.g. 18"
                 />
@@ -105,8 +103,8 @@ export const ApplicationPage: React.FC<ApplicationPageProps> = ({ onSubmit }) =>
                 <input 
                   required
                   type="text" 
-                  value={formData.username}
-                  onChange={e => setFormData({...formData, username: e.target.value})}
+                  value=${formData.username}
+                  onChange=${e => setFormData({...formData, username: e.target.value})}
                   className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors font-medium"
                   placeholder="Your IGN"
                 />
@@ -117,9 +115,9 @@ export const ApplicationPage: React.FC<ApplicationPageProps> = ({ onSubmit }) =>
               <label className="block text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">What kind of player are you?</label>
               <textarea 
                 required
-                value={formData.playerDescription}
-                onChange={e => setFormData({...formData, playerDescription: e.target.value})}
-                rows={3}
+                value=${formData.playerDescription}
+                onChange=${e => setFormData({...formData, playerDescription: e.target.value})}
+                rows=${3}
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors font-medium"
                 placeholder="Builder, redstoner, technical player, explorer..."
               />
@@ -129,9 +127,9 @@ export const ApplicationPage: React.FC<ApplicationPageProps> = ({ onSubmit }) =>
               <label className="block text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">What do you want to do on the server?</label>
               <textarea 
                 required
-                value={formData.goals}
-                onChange={e => setFormData({...formData, goals: e.target.value})}
-                rows={3}
+                value=${formData.goals}
+                onChange=${e => setFormData({...formData, goals: e.target.value})}
+                rows=${3}
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors font-medium"
                 placeholder="Projects, shops, bases, lore..."
               />
@@ -142,8 +140,8 @@ export const ApplicationPage: React.FC<ApplicationPageProps> = ({ onSubmit }) =>
               <input 
                 required
                 type="text" 
-                value={formData.playtime}
-                onChange={e => setFormData({...formData, playtime: e.target.value})}
+                value=${formData.playtime}
+                onChange=${e => setFormData({...formData, playtime: e.target.value})}
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors font-medium"
                 placeholder="e.g. 10 hours a week"
               />
@@ -153,9 +151,9 @@ export const ApplicationPage: React.FC<ApplicationPageProps> = ({ onSubmit }) =>
               <label className="block text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Why do you want to join Create 80ct?</label>
               <textarea 
                 required
-                value={formData.motivation}
-                onChange={e => setFormData({...formData, motivation: e.target.value})}
-                rows={4}
+                value=${formData.motivation}
+                onChange=${e => setFormData({...formData, motivation: e.target.value})}
+                rows=${4}
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors font-medium"
                 placeholder="What makes us stand out to you?"
               />
@@ -164,9 +162,9 @@ export const ApplicationPage: React.FC<ApplicationPageProps> = ({ onSubmit }) =>
             <div className="space-y-2">
               <label className="block text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Anything else we should know?</label>
               <textarea 
-                value={formData.additionalInfo}
-                onChange={e => setFormData({...formData, additionalInfo: e.target.value})}
-                rows={2}
+                value=${formData.additionalInfo}
+                onChange=${e => setFormData({...formData, additionalInfo: e.target.value})}
+                rows=${2}
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors font-medium"
                 placeholder="Special skills, friends on the server, etc."
               />
@@ -179,19 +177,18 @@ export const ApplicationPage: React.FC<ApplicationPageProps> = ({ onSubmit }) =>
               className="flex items-center gap-2 px-12 py-5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-black text-xl transition-all shadow-md"
             >
               SUBMIT APPLICATION
-              <ChevronRight className="w-6 h-6" />
+              <${Lucide.ChevronRight} className="w-6 h-6" />
             </button>
           </div>
         </form>
       </div>
 
-      {/* Rules Confirmation Modal */}
-      {showConfirmModal && (
+      ${showConfirmModal && html`
         <div className="fixed inset-0 z-[100] flex items-center justify-center px-6">
-          <div className="absolute inset-0 bg-black/90 backdrop-blur-xl" onClick={() => setShowConfirmModal(false)}></div>
+          <div className="absolute inset-0 bg-black/90 backdrop-blur-xl" onClick=${() => setShowConfirmModal(false)}></div>
           <div className="relative glass w-full max-w-md p-10 rounded-[2.5rem] border border-blue-500/20 shadow-2xl animate-in zoom-in duration-300">
             <div className="w-16 h-16 bg-blue-600/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
-              <AlertTriangle className="w-8 h-8 text-blue-500" />
+              <${Lucide.TriangleAlert} className="w-8 h-8 text-blue-500" />
             </div>
             <h2 className="text-2xl font-black text-center text-white uppercase tracking-tight mb-4">Wait a second!</h2>
             <p className="text-center text-gray-400 text-sm mb-8 leading-relaxed">
@@ -200,13 +197,13 @@ export const ApplicationPage: React.FC<ApplicationPageProps> = ({ onSubmit }) =>
             
             <div className="flex flex-col gap-3">
               <button 
-                onClick={finalizeSubmission}
+                onClick=${finalizeSubmission}
                 className="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white font-black rounded-2xl transition-all shadow-md uppercase tracking-widest text-xs"
               >
                 Yes, I understand and agree
               </button>
               <button 
-                onClick={redirectToRules}
+                onClick=${redirectToRules}
                 className="w-full py-4 bg-white/5 hover:bg-white/10 text-gray-300 font-black rounded-2xl transition-all border border-white/10 uppercase tracking-widest text-[10px]"
               >
                 No, let me read them again
@@ -214,7 +211,7 @@ export const ApplicationPage: React.FC<ApplicationPageProps> = ({ onSubmit }) =>
             </div>
           </div>
         </div>
-      )}
+      `}
     </div>
-  );
+  `;
 };
