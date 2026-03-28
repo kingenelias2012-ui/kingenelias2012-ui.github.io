@@ -9,7 +9,7 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
-  const DISCORD_LINK = "https://discord.gg/TwSNfFr7";
+  const DISCORD_LINK = "https://discord.gg/7rPtDM6sg";
   const navItems = [
     { id: 'home', label: 'HOME' },
     { id: 'rules', label: 'RULES' },
